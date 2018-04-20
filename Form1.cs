@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
+using System.IO;
 
 namespace tusent_admin
 {
@@ -12,6 +13,9 @@ namespace tusent_admin
 	/// </summary>
 	public class Form1 : System.Windows.Forms.Form
 	{
+		// Settings path
+		public static string settingsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\scanner_type.txt";
+
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button buttonMicrImage;
 		private System.Windows.Forms.Button buttonImageSafe;
@@ -86,7 +90,7 @@ namespace tusent_admin
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(136, 23);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Scanners ADMIN";
+			this.label1.Text = "Scanners ADMIN Select the scanner type that will be used in this computer.";
 			this.label1.Click += new System.EventHandler(this.label1_Click);
 			// 
 			// Form1
@@ -112,6 +116,25 @@ namespace tusent_admin
 			Application.Run(new Form1());
 		}
 
+		// Saving the settings file
+		private static void Save_Settings(string scannerType)
+		{
+			using (StreamWriter sw = new StreamWriter(settingsPath))
+			{
+				if (Validate_Scanner_Type(scannerType))
+				{
+					sw.WriteLine(scannerType);
+					savedScannerType = scannerType;
+				}
+			}
+		}
+
+		private static bool Validate_Scanner_Type(string scannerType)
+		{
+			return (scannerType == "MicrImage" || scannerType == "ImageSafe");
+		}
+
+
 		private void label1_Click(object sender, System.EventArgs e)
 		{
 		
@@ -119,12 +142,12 @@ namespace tusent_admin
 
 		private void buttonMicrImage_Click(object sender, System.EventArgs e)
 		{
-		
+			Save_Settings("MicrImage");		
 		}
 
 		private void buttonImageSafe_Click(object sender, System.EventArgs e)
 		{
-		
+			Save_Settings("ImageSafe");
 		}
 	}
 }
